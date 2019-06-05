@@ -1,1 +1,26 @@
-<h1> This page will show your restaurants </h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Restaurants</h1>
+    {% if restaurants|length > 0 %}
+    <ul>
+        {% for restaurant in restaurants %}
+        <li>
+            <h3>{{restaurant.name}}</h1>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <h3>No restaurants available.</h3>
+    {% endif %}
+</body>
+
+</html>

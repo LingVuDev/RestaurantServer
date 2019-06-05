@@ -7,6 +7,20 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <h1>Menu of {{restaurant.name}}</h1>
+    {% if menu|length > 0 %}
+    <ul id="navigation">
+    {% for item in menu %}
+        <li>
+            <h3>{{item.name}} {{item.price}}</h1>
+            <p>{{item.description}}</p>
+            <a href="#">Edit</a>
+            <a href="#">Delete</a>
+        </li>
+    {% endfor %}
+    {% else %}
+    <h3>No dishes available.</h3>
+    {% endif %}
+    </ul>
 </body>
 </html>

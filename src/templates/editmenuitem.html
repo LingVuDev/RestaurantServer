@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <h1>Edit dish {{ item.name }}</h1>
+    <form
+      action="/restaurants/{{ restaurant.id }}/menu/{{ item.id }}/edit"
+      method="post"
+    >
+      Name of the dish:<br />
+      <input type="text" name="name" value="{{ item.name }}" /><br />
+      Description:<br />
+      <input
+        type="text"
+        name="description"
+        value="{{ item.description }}"
+      /><br />
+      Price:<br />
+      <input type="text" name="price" value="{{ item.price }}" /><br />
+      Course:<br />
+      <input type="text" name="course" value="{{ item.course }}" /><br />
+      <br />
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>
