@@ -10,6 +10,7 @@
 
 <body>
     <h1>Restaurants</h1>
+    {% if restaurants|length > 0 %}
     <ul>
         {% for restaurant in restaurants %}
         <li>
@@ -17,6 +18,9 @@
         </li>
         {% endfor %}
     </ul>
+    {% else %}
+    <h3>No restaurants available.</h3>
+    {% endif %}
 </body>
 
 </html>
