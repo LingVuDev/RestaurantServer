@@ -1,5 +1,6 @@
 from flask import Flask, render_template
-
+from src.models.SharedModels import db
+from flask_sqlalchemy import SQLAlchemy
 
 # Fake Restaurants
 restaurant = {'name': 'The CRUDdy Crab', 'id': '1'}
@@ -16,6 +17,11 @@ item = {'name': 'Cheese Pizza', 'description': 'made with fresh cheese',
 
 
 app = Flask("main", template_folder="src/templates")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///restaurants.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+with app.app_context():
+    db.init_app(app)
+    db.create_all()
 
 
 @app.route('/')
