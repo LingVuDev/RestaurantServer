@@ -1,11 +1,27 @@
 import sys
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, ForeignKey, Integer, String
-from src.models.SharedModels import db
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-from src.models.Restaurant import Restaurant
+
+db = SQLAlchemy()
 
 Base = db.Model
+
+
+class Restaurant(Base):
+
+    __tablename__ = 'restaurant'
+
+    name = Column(String(80), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    @staticmethod
+    def create_restaurant(name):
+        """Create a new restaurant entry"""
+        restaurant = Restaurant(name=name)
+        db.session.add(restaurant)
+        db.session.commit()
 
 
 class MenuItem(Base):
