@@ -36,19 +36,32 @@ def new_restaurants():
     return render_template('newrestaurant.html')
 
 
-@app.route('/restaurants/<int:restaurant_id>/edit')
+@app.route('/restaurants/<int:restaurant_id>/edit', methods=['GET', 'POST'])
 def edit_restaurants(restaurant_id: int):
+    if request.method == 'POST':
+        post = request.form
+        Restaurant.update_restaurant_name(restaurant_id, post['name'])
+        return redirect("/")
+    restaurant = Restaurant.get_restaurant_by_id(restaurant_id)
     return render_template('editrestaurant.html', restaurant=restaurant)
 
 
 @app.route('/restaurants/<int:restaurant_id>/delete')
 def delete_restaurants(restaurant_id: int):
+    restaurant = Restaurant.get_restaurant_by_id(restaurant_id)
     return render_template('deleterestaurant.html', restaurant=restaurant)
+
+
+@app.route('/restaurants/<int:restaurant_id>/deletation_confirmed')
+def delete_restaurant_confirmed(restaurant_id: int):
+    Restaurant.delete_restaurant(restaurant_id)
+    return redirect("/")
 
 
 @app.route('/restaurants/<int:restaurant_id>')
 @app.route('/restaurants/<int:restaurant_id>/menu')
 def show_menu(restaurant_id: int):
+    restaurant = Restaurant.get_restaurant_by_id(restaurant_id)
     return render_template('menu.html', restaurant=restaurant, menu=items)
 
 

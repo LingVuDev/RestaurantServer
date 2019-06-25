@@ -15,12 +15,15 @@
         {% for restaurant in restaurants %}
         <li>
             <a href="/restaurants/{{restaurant.id}}"><h3>{{restaurant.name}}</h></a>
+                <a href="/restaurants/{{restaurant.id}}/edit">[Edit]</a>
+                <a href="/restaurants/{{restaurant.id}}/delete">[Delete]</a>
         </li>
         {% endfor %}
     </ul>
     {% else %}
     <h3>No restaurants available.</h3>
     {% endif %}
+    <a href="/restaurants/new">Add new restaurant</a>
 </body>
 
 </html>

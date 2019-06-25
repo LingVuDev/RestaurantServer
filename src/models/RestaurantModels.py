@@ -23,6 +23,22 @@ class Restaurant(Base):
         db.session.add(restaurant)
         db.session.commit()
 
+    @staticmethod
+    def get_restaurant_by_id(id):
+        return Restaurant.query.filter_by(id=id).first()
+
+    @staticmethod
+    def update_restaurant_name(id, name):
+        restaurant = Restaurant.query.filter_by(id=id).first()
+        restaurant.name = name
+        db.session.commit()
+
+    @staticmethod
+    def delete_restaurant(id):
+        restaurant = Restaurant.query.filter_by(id=id).first()
+        db.session.delete(restaurant)
+        db.session.commit()
+
 
 class MenuItem(Base):
 
