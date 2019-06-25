@@ -1,13 +1,9 @@
-from flask import Flask, render_template
-from src.models.SharedModels import db
+from flask import Flask, render_template, request, url_for, redirect
+from src.models.RestaurantModels import db, Restaurant, MenuItem
 from flask_sqlalchemy import SQLAlchemy
 
 # Fake Restaurants
 restaurant = {'name': 'The CRUDdy Crab', 'id': '1'}
-
-restaurants = [{'name': 'The CRUDdy Crab', 'id': '1'}, {
-    'name': 'Blue Burgers', 'id': '2'}, {'name': 'Taco Hut', 'id': '3'}]
-
 
 # Fake Menu Items
 items = [{'name': 'Cheese Pizza', 'description': 'made with fresh cheese', 'price': '$5.99', 'course': 'Entree', 'id': '1'}, {'name': 'Chocolate Cake', 'description': 'made with Dutch Chocolate', 'price': '$3.99', 'course': 'Dessert', 'id': '2'}, {'name': 'Caesar Salad', 'description': 'with fresh organic vegetables',
@@ -27,11 +23,16 @@ with app.app_context():
 @app.route('/')
 @app.route('/restaurants')
 def show_restaurants():
+    restaurants = Restaurant.query.all()
     return render_template('restaurants.html', restaurants=restaurants)
 
 
-@app.route('/restaurants/new')
+@app.route('/restaurants/new', methods=['GET', 'POST'])
 def new_restaurants():
+    if request.method == 'POST':
+        post = request.form
+        Restaurant.create_restaurant(post['name'])
+        return redirect("/")
     return render_template('newrestaurant.html')
 
 
