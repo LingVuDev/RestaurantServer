@@ -63,3 +63,22 @@ class MenuItem(Base):
     @staticmethod
     def get_menu_by_restaurant_id(id):
         return MenuItem.query.filter_by(restaurant_id=id).all()
+
+    @staticmethod
+    def get_menu_item_by_id(id):
+        return MenuItem.query.filter_by(id=id).first()
+
+    @staticmethod
+    def update_menu_item(menuitem_id, name, description, price, course):
+        menu_item = MenuItem.query.filter_by(id=menuitem_id).first()
+        menu_item.name = name
+        menu_item.description = description
+        menu_item.price = price
+        menu_item.course = course
+        db.session.commit()
+
+    @staticmethod
+    def delete_menu_item(id):
+        menu_item = MenuItem.query.filter_by(id=id).first()
+        db.session.delete(menu_item)
+        db.session.commit()
