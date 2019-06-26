@@ -23,15 +23,62 @@ class Restaurant(Base):
         db.session.add(restaurant)
         db.session.commit()
 
+    @staticmethod
+    def get_restaurant_by_id(id):
+        return Restaurant.query.filter_by(id=id).first()
+
+    @staticmethod
+    def update_restaurant_name(id, name):
+        restaurant = Restaurant.query.filter_by(id=id).first()
+        restaurant.name = name
+        db.session.commit()
+
+    @staticmethod
+    def delete_restaurant(id):
+        restaurant = Restaurant.query.filter_by(id=id).first()
+        db.session.delete(restaurant)
+        db.session.commit()
+
 
 class MenuItem(Base):
 
     __tablename__ = 'menu_item'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(250), nullable=False)
     course = Column(String(250), nullable=False)
     description = Column(String(250))
     price = Column(String(8))
 
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
+
+    @staticmethod
+    def create_new_menu_item(restaurant_id, name, description, price, course):
+        menu_item = MenuItem(
+            restaurant_id=restaurant_id, name=name, course=course, description=description, price=price)
+        db.session.add(menu_item)
+        db.session.commit()
+
+    @staticmethod
+    def get_menu_by_restaurant_id(id):
+        return MenuItem.query.filter_by(restaurant_id=id).all()
+
+    @staticmethod
+    def get_menu_item_by_id(id):
+        return MenuItem.query.filter_by(id=id).first()
+
+    @staticmethod
+    def update_menu_item(menuitem_id, name, description, price, course):
+        menu_item = MenuItem.query.filter_by(id=menuitem_id).first()
+        menu_item.name = name
+        menu_item.description = description
+        menu_item.price = price
+        menu_item.course = course
+        db.session.commit()
+
+    @staticmethod
+    def delete_menu_item(id):
+        menu_item = MenuItem.query.filter_by(id=id).first()
+        db.session.delete(menu_item)
+        db.session.commit()

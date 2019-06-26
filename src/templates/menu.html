@@ -14,13 +14,14 @@
         <li>
             <h3>{{item.name}} {{item.price}}</h1>
             <p>{{item.description}}</p>
-            <a href="#">Edit</a>
-            <a href="#">Delete</a>
+            <a href="/restaurants/{{restaurant.id}}/menu/{{item.id}}/edit">Edit</a>
+            <a href="/restaurants/{{restaurant.id}}/menu/{{item.id}}/delete">Delete</a>
         </li>
     {% endfor %}
     {% else %}
     <h3>No dishes available.</h3>
     {% endif %}
     </ul>
+    <a href="/restaurants/{{restaurant.id}}/menu/new">Add new menu item</a>
 </body>
 </html>
