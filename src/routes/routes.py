@@ -62,11 +62,13 @@ def delete_restaurant_confirmed(restaurant_id: int):
 @app.route('/restaurants/<int:restaurant_id>/menu')
 def show_menu(restaurant_id: int):
     restaurant = Restaurant.get_restaurant_by_id(restaurant_id)
+    items = MenuItem.get_menu_by_restaurant_id(restaurant_id)
     return render_template('menu.html', restaurant=restaurant, menu=items)
 
 
 @app.route('/restaurants/<int:restaurant_id>/menu/new')
 def new_menuitem(restaurant_id: int):
+    restaurant = Restaurant.get_restaurant_by_id(restaurant_id)
     return render_template('newmenuitem.html', restaurant=restaurant)
 
 

@@ -51,3 +51,7 @@ class MenuItem(Base):
 
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
+
+    @staticmethod
+    def get_menu_by_restaurant_id(id):
+        return MenuItem.query.filter_by(restaurant_id=id).all()
