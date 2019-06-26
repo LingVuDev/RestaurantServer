@@ -9,7 +9,7 @@
 
   <body>
     <h1>Add new dish to {{ restaurant.name }}</h1>
-    <form action="/restaurants/new" method="post">
+    <form action="/restaurants/{{ restaurant.id }}/menu/new" method="post">
       Name of the dish:<br />
       <input type="text" name="name" value="" /><br />
       Description:<br />

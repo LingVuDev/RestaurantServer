@@ -44,13 +44,21 @@ class MenuItem(Base):
 
     __tablename__ = 'menu_item'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(250), nullable=False)
     course = Column(String(250), nullable=False)
     description = Column(String(250))
     price = Column(String(8))
 
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
+
+    @staticmethod
+    def create_new_menu_item(restaurant_id, name, description, price, course):
+        menu_item = MenuItem(
+            restaurant_id=restaurant_id, name=name, course=course, description=description, price=price)
+        db.session.add(menu_item)
+        db.session.commit()
 
     @staticmethod
     def get_menu_by_restaurant_id(id):

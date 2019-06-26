@@ -66,8 +66,13 @@ def show_menu(restaurant_id: int):
     return render_template('menu.html', restaurant=restaurant, menu=items)
 
 
-@app.route('/restaurants/<int:restaurant_id>/menu/new')
+@app.route('/restaurants/<int:restaurant_id>/menu/new', methods=['GET', 'POST'])
 def new_menuitem(restaurant_id: int):
+    if request.method == 'POST':
+        post = request.form
+        MenuItem.create_new_menu_item(
+            restaurant_id, post['name'], post['description'], post['price'], post['course'])
+        return redirect("/restaurants/" + str(restaurant_id) + "/menu")
     restaurant = Restaurant.get_restaurant_by_id(restaurant_id)
     return render_template('newmenuitem.html', restaurant=restaurant)
 
