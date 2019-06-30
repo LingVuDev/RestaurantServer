@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect
 from src.models.RestaurantModels import db, Restaurant, MenuItem
 from flask_sqlalchemy import SQLAlchemy
+from src.login.login_constants import get_google_credentials
 
 # Fake Restaurants
 restaurant = {'name': 'The CRUDdy Crab', 'id': '1'}
@@ -25,6 +26,11 @@ with app.app_context():
 def show_restaurants():
     restaurants = Restaurant.query.all()
     return render_template('restaurants.html', restaurants=restaurants)
+
+@app.route('/login')
+def login():
+    print(get_google_credentials())
+    return render_template('login.html', google_credentials=get_google_credentials())
 
 
 @app.route('/restaurants/new', methods=['GET', 'POST'])

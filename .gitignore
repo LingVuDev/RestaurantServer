@@ -2,3 +2,4 @@ venv/
 .vscode/
 __pycache__/
 restaurants.db
+google_credentials.json
