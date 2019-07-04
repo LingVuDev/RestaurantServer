@@ -8,5 +8,3 @@ def get_google_credentials():
     except FileNotFoundError:
         print("No file google_credentials.json found. Please follow these instructions " + 
         "https://developers.google.com/identity/sign-in/web/sign-in to get the file")
-
-

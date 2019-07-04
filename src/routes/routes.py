@@ -1,7 +1,11 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, session, make_response
 from src.models.RestaurantModels import db, Restaurant, MenuItem
 from flask_sqlalchemy import SQLAlchemy
 from src.login.login_constants import get_google_credentials
+from src.login.login_helper import get_user_info_from_google_id_token
+import random
+import string
+import json
 
 # Fake Restaurants
 restaurant = {'name': 'The CRUDdy Crab', 'id': '1'}
@@ -16,6 +20,8 @@ item = {'name': 'Cheese Pizza', 'description': 'made with fresh cheese',
 app = Flask("main", template_folder="src/templates")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///restaurants.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                         for x in range(32)).encode()
 with app.app_context():
     db.init_app(app)
     db.create_all()
@@ -27,10 +33,62 @@ def show_restaurants():
     restaurants = Restaurant.query.all()
     return render_template('restaurants.html', restaurants=restaurants)
 
+
 @app.route('/login')
 def login():
-    print(get_google_credentials())
-    return render_template('login.html', google_credentials=get_google_credentials())
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in range(32))
+    session['state'] = state
+
+    return render_template('login.html', google_credentials=get_google_credentials(), STATE=state)
+
+
+@app.route('/gconnect', methods=['POST'])
+def gconnect():
+
+    # Validate state token
+    try:
+        if request.args.get('state') != session['state']:
+            response = make_response(json.dumps(
+                'Invalid state parameter.'), 401)
+            response.headers['Content-Type'] = 'application/json'
+            return response
+    except KeyError as e:
+        response = make_response(json.dumps(
+            'Invalid state parameter.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    # Obtain authorization code
+    token = request.form['data']
+    client_id = request.form['client_id']
+
+    # Get user info
+    user_info = get_user_info_from_google_id_token(token, client_id)
+
+    # Check validity
+    if user_info['aud'] != get_google_credentials()['client_id']:
+        response = make_response(json.dumps(
+            "Token's user ID doesn't match given user", 401))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    # Check if the user is already logged in
+    stored_token = session.get('access_token')
+    stored_client_id = session.get('client_id')
+
+    # Check if already logged by comparing the session values with the request values
+    if(stored_token is not None and stored_client_id == client_id):
+        response = make_response(json.dumps(
+            "User is already connected"), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    # Store the access token in the session for later use.
+    session['access_token'] = token
+    session['client_id'] = client_id
+
+    return redirect("/")
 
 
 @app.route('/restaurants/new', methods=['GET', 'POST'])
